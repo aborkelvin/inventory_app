@@ -40,12 +40,10 @@ def update_product_quantity(doc, method):
     frappe.msgprint(f"Updating product: {doc.product} with quantity: {doc.quantity}")
     if doc.transaction_type == "IN":
         product = frappe.get_doc("Product", doc.product)
-        # Update quantity using update method
         product.update({"quantity": product.quantity + doc.quantity})
     elif doc.transaction_type == "OUT":
         product = frappe.get_doc("Product", doc.product)
         if product.quantity >= doc.quantity:
-            # Update quantity using update method
             product.update({"quantity": product.quantity - doc.quantity})
         else:
             frappe.throw("Not enough stock to complete this transaction.") """
