@@ -5,6 +5,17 @@ app_description = "App to manage sales store inventory"
 app_email = "aboranthony15@gmail.com"
 app_license = "mit"
 
+
+doc_events = {
+    "Inventory Transaction": {
+        "on_submit": "inventory_app.inventory_app.doctype.inventory_transaction.inventory_transaction.update_product_quantity"
+    },
+    "Sale": {
+        "on_submit": "inventory_app.inventory_app.doctype.sale.sale.create_inventory_transaction_on_sale"
+    }
+}
+
+
 # Apps
 # ------------------
 
