@@ -12,6 +12,9 @@ doc_events = {
     },
     "Sale": {
         "on_submit": "inventory_app.inventory_app.doctype.sale.sale.create_inventory_transaction_on_sale"
+    },
+    "Purchase":{
+        "on_submit" : "inventory_app.inventory_app.doctype.purchase.purchase.create_inventory_transaction_on_purchase"
     }
 }
 
