@@ -1,0 +1,24 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sale",
+  "enabled": 1,
+  "modified": "2024-12-31 18:00:20.864685",
+  "module": "Inventory App",
+  "name": "Calculate sale_item price",
+  "script": "frappe.ui.form.on('Sale', {\n    refresh(frm) {\n        // Optional: Add refresh logic if needed\n        console.log('Sale form appears');\n    },\n    // Trigger the total calculation when the sale items are updated\n    validate(frm) {\n        calculate_total(frm);\n    }\n});\n\nfrappe.ui.form.on('Sale Item', {\n    quantity: function (frm, cdt, cdn) {\n        console.log(\"Quantity field triggered!\");  // Basic log to test trigger\n        let row = locals[cdt][cdn];\n        \n        if (row.product) {\n            frappe.call({\n                method: \"frappe.client.get\",\n                args: {\n                    doctype: \"Product\",\n                    name: row.product\n                },\n                callback: function (r) {\n                    console.log(r);\n                    if (r.message) {\n                        console.log(r.message.price);\n                        // Update the price directly in the child table row\n                        frappe.model.set_value(cdt, cdn, 'price', r.message.price * row.quantity);\n                        // Recalculate the total after the price is updated\n                        calculate_total(frm);\n                    }\n                }\n            });\n        }\n    },\n    price: function(frm) {\n        // Recalculate the total when price changes\n        calculate_total(frm);\n    }\n});\n\n// Function to calculate the total amount of all sale items\nfunction calculate_total(frm) {\n    let total_amount = 0;\n    \n    // Loop through all the Sale Item rows and sum the price\n    frm.doc.items.forEach(function(item) {\n        if (item.price) {\n            total_amount += item.price;\n        }\n    });\n    \n    // Set the total_amount field on the parent Sale form\n    frm.set_value('total_amount', total_amount); // Make sure 'total_amount' is the field name on your form\n    console.log('Total amount: ', total_amount);\n}\n",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Purchase",
+  "enabled": 1,
+  "modified": "2024-12-31 18:01:58.216246",
+  "module": "Inventory App",
+  "name": "calculate purchase_item price",
+  "script": "frappe.ui.form.on('Purchase', {\n    refresh(frm) {\n        // Optional: Add refresh logic if needed\n        console.log('purchase form appears');\n    },\n    // Trigger the total calculation when the Purchase items are updated\n    validate(frm) {\n        calculate_total(frm);\n    }\n});\n\nfrappe.ui.form.on('Purchase Item', {\n    quantity: function (frm, cdt, cdn) {\n        console.log(\"Quantity field triggered!\");  // Basic log to test trigger\n        let row = locals[cdt][cdn];\n        \n        if (row.product) {\n            frappe.call({\n                method: \"frappe.client.get\",\n                args: {\n                    doctype: \"Product\",\n                    name: row.product\n                },\n                callback: function (r) {\n                    console.log(r);\n                    if (r.message) {\n                        console.log(r.message.price);\n                        // Update the price directly in the child table row\n                        frappe.model.set_value(cdt, cdn, 'price', r.message.price * row.quantity);\n                        // Recalculate the total after the price is updated\n                        calculate_total(frm);\n                    }\n                }\n            });\n        }\n    },\n    price: function(frm) {\n        // Recalculate the total when price changes\n        calculate_total(frm);\n    }\n});\n\n// Function to calculate the total amount of all purchase items\nfunction calculate_total(frm) {\n    let total_amount = 0;\n    \n    // Loop through all the Purchase Item rows and sum the price\n    frm.doc.items.forEach(function(item) {\n        if (item.price) {\n            total_amount += item.price;\n        }\n    });\n    \n    // Set the total_amount field on the parent Purchase form\n    frm.set_value('total_amount', total_amount); // Make sure 'total_amount' is the field name on your form\n    console.log('Total amount: ', total_amount);\n}\n",
+  "view": "Form"
+ }
+]

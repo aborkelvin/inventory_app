@@ -18,6 +18,16 @@ doc_events = {
     }
 }
 
+fixtures = [
+    {
+        "doctype": "Client Script",
+        "filters": [
+            ["module", "=", "Inventory App"]
+        ]
+    }
+]
+
+
 
 # Apps
 # ------------------
